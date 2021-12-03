@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import axios from "axios";
+import {LinearGradient} from 'expo-linear-gradient';
 
 export default function App() {
     const [error, setError] = useState(null);
@@ -32,9 +33,12 @@ export default function App() {
     } else if (!items) {
         return <Text>Загрузка...</Text>;
     } else {
+        const photo = `http:` + items.current.condition.icon
         return (
             <View style={styles.container}>
-                <Text>{items.forecast.forecastday[0].day.condition.text}</Text>
+                <LinearGradient colors={['#6f5fef', '#749af5', '#96d1fb']}>
+                    <Image style={styles.tinyLogo} source={{uri: photo}}/>
+                </LinearGradient>
             </View>
         );
     }
@@ -47,5 +51,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    tinyLogo: {
+        width: '30%',
+        height: '30%'
+
     },
 });
