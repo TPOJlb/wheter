@@ -14,7 +14,7 @@ export default function App() {
     // этот useEffect будет запущен один раз
     // аналогично componentDidMount()
     useEffect(() => {
-        axios.get("http://api.weatherapi.com/v1/forecast.json?key=526d4889d65b48cabba160455213011&q=London&days=1&aqi=no&alerts=no")
+        axios.get("http://api.weatherapi.com/v1/forecast.json?key=526d4889d65b48cabba160455213011&q=SanFrancisco&days=1&aqi=no&alerts=no")
             .then(
                 (result) => {
 
@@ -39,6 +39,7 @@ export default function App() {
         const formattedDate = getParsedDate ( items.current.last_updated)
         const er = maxTemp(items)
         const mg = indexUi(items.current.uv)
+        const Main = items.forecast.forecastday[0].hour
 
         return (
             <LinearGradient colors={['#6f5fef', '#749af5', '#96d1fb']} style = {styles.gradient}>
@@ -118,19 +119,21 @@ export default function App() {
                         <Text style={{color: 'white',paddingLeft:25,fontSize:12}}>Hourly</Text>
                     </View>
                 <View style={ styles.hours}>
-                    <ScrollView horizontal = {true} style={{width: 100,height: 200}}>
+                    <ScrollView horizontal = {true} style={{padding:10}}>
+                        {Main.map((item)=>{
 
-                        <View style = {{width:60,height:170,marginTop:25,marginLeft:10,marginRight:10,alignItems:'center', }}>
+                            const photo2 = `http:` + item.condition.icon
+                            return(
+
+                        <View key={item.time_epoch} style = {{marginTop:25,marginLeft:10,marginRight:10,alignItems:'center',justifyContent:'space-between' }}>
                             <View >
-                            <Text style={{color:'white',fontSize:14}}>{Moment(formattedDate).format(' h:mm a')}</Text>
-                            <Image style={{marginTop: 20,marginLeft:10,width: 30,height: 30}} source={{uri: photo}}/>
+                            <Text style={{color:'white',fontSize:14}}>{Moment(item.time).format(' h:mm a')}</Text>
+                            <Image style={{width:40,height:40,marginTop: 0,marginLeft:10}} source={{uri: photo2}}/>
                             </View>
-                            <View style = {{width: 50,height:90,alignItems:'center',
-                                justifyContent:'center',}}>
-                                <Text> </Text>
-                                <Text> </Text>
-                                <Text style ={{color:'white'}}>26</Text>
-                                <View style = {{width: 5,height:26,backgroundColor:'white'}}>
+                            <View style = {{alignItems:'center', justifyContent:'center'}}>
+
+                                <Text style ={{color:'white'}}>{item.temp_c|0}°</Text>
+                                <View style = {{width: 5,height: 30+ item.temp_c,backgroundColor:'white'}}>
 
 
                                 </View>
@@ -138,6 +141,8 @@ export default function App() {
                             </View>
                         </View>
 
+                        );
+                        })}
 
                     </ScrollView>
                 </View>
@@ -208,6 +213,7 @@ const styles = StyleSheet.create({
         flex:0.7,
     },
     hours:{
+        marginVertical: 10,
         flex:7,
         flexDirection:'row',
         marginLeft:10,
