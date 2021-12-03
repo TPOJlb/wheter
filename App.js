@@ -274,20 +274,26 @@ const styles = StyleSheet.create({
 
 function indexUi(item){
     let items = ""
-    if(item<=2){
+    console.log(item)
+    if(item<=2) {
         items = 'Low'
-        if(item>= 3 && item<=5){
+    }else{
+        if(item<=5){
             items = 'Mild'
-            if(item>= 6 && item<=7){
+        }else {
+            if (item <= 7) {
                 items = 'High'
-                if(item>= 8 && item<=10){
+            } else {
+                if (item <= 10) {
                     items = 'Taunt'
-                    if(item>= 11){
+                } else {
+                    if (item > 10) {
                         items = 'Excessive'
                     }
                 }
             }
         }
+
     }
     return (items);
 }
