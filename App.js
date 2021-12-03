@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, Image, StatusBar, Platform} from 'react-native';
 import axios from "axios";
 import {LinearGradient} from 'expo-linear-gradient';
-import { AntDesign,Entypo  } from '@expo/vector-icons';
+import { AntDesign,Entypo,SimpleLineIcons,FontAwesome5   } from '@expo/vector-icons';
 import Moment from 'moment';
 
 export default function App() {
@@ -38,10 +38,12 @@ export default function App() {
         const photo = `http:` + items.current.condition.icon
         const formattedDate = getParsedDate ( items.current.last_updated)
         const er = maxTemp(items)
-        console.log(er)
+        const mg = ui(items)
+        console.log(mg)
         return (
+            <LinearGradient colors={['#6f5fef', '#749af5', '#96d1fb']} style = {styles.gradient}>
             <View style={styles.container}>
-                <LinearGradient colors={['#6f5fef', '#749af5', '#96d1fb']} style = {styles.gradient}>
+
                     <View style={ styles.location}>
                         <Text style={{color:'white'}}>Locations</Text>
                         <AntDesign name="search1" size={30} color="white" />
@@ -62,12 +64,54 @@ export default function App() {
                         <Entypo name="circle" size={13} color="white" style={{marginBottom: 55,}} />
                     </View>
                     <View style={ styles.feel}>
-
+                        <View style={{flex: 1,justifyContent: 'center',alignItems:'center',flexDirection:'row'}}>
+                            <Text style={{color:'white'}}>{er[0] |0}</Text>
+                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
+                            <Text style={{color:'white'}}>/{er[1]|0}</Text>
+                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
+                            <Text style={{color:'white'}}> Feels like {items.current.feelslike_c|0}</Text>
+                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
+                        </View>
+                        <View style={{flex: 1,justifyContent: 'center',alignItems:'center',flexDirection:'row'}}>
+                            <Text style={{color:'white'}}>{items.current.condition.text}</Text>
+                        </View>
                     </View>
                     <View style={ styles.textCenter}>
-
+                        <View style={{flex: 1,paddingLeft: 220,alignItems:'center',flexDirection:'row'}}>
+                            <Text style={{color:'white'}}>Yesterday: {er[0] |0}</Text>
+                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
+                            <Text style={{color:'white'}}>/{er[1]|0}</Text>
+                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
+                        </View>
                     </View>
                     <View style={ styles.UV}>
+                        <View style={{flex:1,flexDirection:'row'}}>
+                            <View style={{flex:0.5,alignItems:'center',justifyContent:'center'}}>
+                                <SimpleLineIcons name="drop" size={24} color="white" />
+                            </View>
+                            <View style={{flex:1}}>
+                                <View style={{flex:1,justifyContent:'center'}}>
+                                    <Text style={{color: 'white'}}>Precipitation</Text>
+                                    <Text style={{color: 'white'}}>{items.current.humidity}%</Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={{width: 14,height: '100%',alignItems:'center',justifyContent:'center'}}>
+                            <View style={{backgroundColor:'white',width: 2,height: 50,alignItems:'center',justifyContent:'center'}}>
+                                
+                            </View>
+                        </View>
+                        <View style={{flex:1,flexDirection:'row'}}>
+                            <View style={{flex:0.5,alignItems:'center',justifyContent:'center'}}>
+                                <FontAwesome5 name="sun" size={24} color="yellow" />
+                            </View>
+                            <View style={{flex:1}}>
+                                <View style={{flex:1}}>
+                                    <Text style={{color: 'white'}}>UV Index</Text>
+                                    <Text style={{color: 'white'}}>{mg}</Text>
+                                </View>
+                            </View>
+                        </View>
 
                     </View>
                     <View style={ styles.textBottom}>
@@ -76,8 +120,9 @@ export default function App() {
                     <View style={ styles.hours}>
 
                     </View>
-                </LinearGradient>
+
             </View>
+            </LinearGradient>
         );
     }
 }
@@ -86,8 +131,10 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 22,
-        backgroundColor: "white",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        paddingLeft:10,
+        paddingRight:10,
+
     },
     tinyLogo: {
         width: '25%',
@@ -96,34 +143,39 @@ const styles = StyleSheet.create({
     },
     location:{
       flex:1,
-        backgroundColor:'black',
         flexDirection:'row',
+        justifyContent:'flex-end'
     },
     country:{
         flex:2.6,
-        backgroundColor:'blue',
         alignItems:'center',
     },
     temp:{
         flex:4,
         flexDirection:'row',
-        backgroundColor:'gray',
         alignItems:'center',
         justifyContent:'center',
         paddingBottom: 0
     },
     feel:{
         flex:2.5,
-        flexDirection:'row',
-        backgroundColor:'yellow',
+        flexDirection:'column',
     },
     textCenter:{
-        flex:0.5,
-        backgroundColor:'white',
+        flex:0.6,
     },
     UV:{
         flex:3.5,
-        backgroundColor:'purple',
+        flexDirection:'row',
+        borderRadius: 6,
+        borderWidth:1,
+        marginTop: 5,
+        marginLeft:10,
+        marginRight:10,
+        paddingRight:20,
+        paddingLeft:20,
+
+
     },
     textBottom:{
         flex:0.5,
@@ -138,6 +190,27 @@ const styles = StyleSheet.create({
         backgroundColor:'black',
     },
 });
+
+function ui(item){
+    let items = ''
+    if(item<=2){
+        items = 'Low'
+        if(item>= 3 && item<=5){
+            items = 'Mild'
+            if(item>= 6 && item<=7){
+                items = 'High'
+                if(item>= 8 && item<=10){
+                    items = 'Taunt'
+                    if(item>= 11){
+                        items = 'Excessive'
+                    }
+                }
+            }
+        }
+    }
+    console.log(items)
+    return (items);
+}
 
 function maxTemp(Max){
    let MinMax = Max.forecast.forecastday[0].hour;
