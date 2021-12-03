@@ -4,17 +4,36 @@ import axios from "axios";
 import {LinearGradient} from 'expo-linear-gradient';
 import { AntDesign,Entypo,SimpleLineIcons,FontAwesome5   } from '@expo/vector-icons';
 import Moment from 'moment';
+import AppLoading from 'expo-app-loading';
+import * as Font from "expo-font";
+
+
+const fonts = () => Font.loadAsync({
+
+    'RobotoRegular': require('./assets/Fonts/RobotoSlab-Regular.ttf'),
+    'RobotoBlack': require('./assets/Fonts/RobotoSlab-Black.ttf'),
+    'RobotoExtraBold': require('./assets/Fonts/RobotoSlab-ExtraBold.ttf'),
+    'RobotoExtraLight': require('./assets/Fonts/RobotoSlab-ExtraLight.ttf'),
+    'RobotoBold': require('./assets/Fonts/RobotoSlab-Bold.ttf'),
+    'RobotoLight': require('./assets/Fonts/RobotoSlab-Light.ttf'),
+    'RobotoMedium': require('./assets/Fonts/RobotoSlab-Medium.ttf'),
+    'RobotoSemiBold': require('./assets/Fonts/RobotoSlab-SemiBold.ttf'),
+    'RobotoThin': require('./assets/Fonts/RobotoSlab-Thin.ttf'),
+
+});
+
 
 export default function App() {
     const [error, setError] = useState(null);
     const [items, setItems] = useState('');
+    const [font,setFont] = useState(false);
 
 
     // Примечание: пустой массив зависимостей [] означает, что
     // этот useEffect будет запущен один раз
     // аналогично componentDidMount()
     useEffect(() => {
-        axios.get("http://api.weatherapi.com/v1/forecast.json?key=526d4889d65b48cabba160455213011&q=SanFrancisco&days=1&aqi=no&alerts=no")
+        axios.get("http://api.weatherapi.com/v1/forecast.json?key=526d4889d65b48cabba160455213011&q=Melitopol Ukraine&days=1&aqi=no&alerts=no")
             .then(
                 (result) => {
 
@@ -41,118 +60,143 @@ export default function App() {
         const mg = indexUi(items.current.uv)
         const Main = items.forecast.forecastday[0].hour
 
-        return (
-            <LinearGradient colors={['#6f5fef', '#749af5', '#96d1fb']} style = {styles.gradient}>
-            <View style={styles.container}>
 
-                    <View style={ styles.location}>
-                        <Text style={{color:'white'}}>Locations</Text>
-                        <AntDesign name="search1" size={30} color="white" />
-                        <Entypo name="dots-three-vertical" size={30} color="white" />
-                    </View>
-                    <View style={styles.country}>
-                        <View style={{flex:1,flexDirection: "row", paddingTop: 30,}}>
-                            <Entypo name="location-pin" size={15} color="white" />
-                            <Text style={{color:'white'}}>{items.location.name}</Text>
+        if(font) {
+            return (
+                <LinearGradient colors={['#6f5fef', '#749af5', '#96d1fb']} style={styles.gradient}>
+                    <View style={styles.container}>
+
+                        <View style={styles.location}>
+                            <Text style={{color: 'white',fontFamily:'RobotoRegular'}}>Locations     </Text>
+                            <AntDesign name="search1" size={20} color="white"/>
+                            <Text>    </Text>
+                            <Entypo name="dots-three-vertical" size={25} color="white"/>
                         </View>
-                        <View style={{flex:1}}>
-                            <Text style={{color:'white'}}>{Moment(formattedDate).format(' ddd D MMMM h:mm a')}</Text>
-                        </View>
-                    </View>
-                    <View style={ styles.temp}>
-                        <Image style={styles.tinyLogo} source={{uri: photo}}/>
-                        <Text style={{ color:"white" ,fontSize:100 }}>{items.current.temp_c | 0}</Text>
-                        <Entypo name="circle" size={13} color="white" style={{marginBottom: 55,}} />
-                    </View>
-                    <View style={ styles.feel}>
-                        <View style={{flex: 1,justifyContent: 'center',alignItems:'center',flexDirection:'row'}}>
-                            <Text style={{color:'white'}}>{er[0] |0}</Text>
-                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
-                            <Text style={{color:'white'}}>/{er[1]|0}</Text>
-                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
-                            <Text style={{color:'white'}}> Feels like {items.current.feelslike_c|0}</Text>
-                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
-                        </View>
-                        <View style={{flex: 1,justifyContent: 'center',alignItems:'center',flexDirection:'row'}}>
-                            <Text style={{color:'white'}}>{items.current.condition.text}</Text>
-                        </View>
-                    </View>
-                    <View style={ styles.textCenter}>
-                        <View style={{flex: 1,paddingLeft: 220,alignItems:'center',flexDirection:'row'}}>
-                            <Text style={{color:'white'}}>Yesterday: {er[0] |0}</Text>
-                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
-                            <Text style={{color:'white'}}>/{er[1]|0}</Text>
-                            <Entypo name="circle" size={5} color="black" style={{color:'white',marginBottom: 8}}/>
-                        </View>
-                    </View>
-                    <View style={ styles.UV}>
-                        <View style={{flex:1,flexDirection:'row'}}>
-                            <View style={{flex:0.5,alignItems:'center',justifyContent:'center'}}>
-                                <SimpleLineIcons name="drop" size={24} color="white" />
+                        <View style={styles.country}>
+                            <View style={{flex: 1, flexDirection: "row", paddingTop: 30,}}>
+                                <Entypo name="location-pin" size={15} color="white"/>
+                                <Text style={{color: 'white',fontFamily:'RobotoExtraBold'}}>{items.location.name}</Text>
                             </View>
-                            <View style={{flex:1}}>
-                                <View style={{flex:1,justifyContent:'center'}}>
-                                    <Text style={{color: 'white'}}>Precipitation</Text>
-                                    <Text style={{color: 'white'}}>{items.current.humidity}%</Text>
+                            <View style={{flex: 1}}>
+                                <Text
+                                    style={{color: 'lightgray',fontFamily:'RobotoLight'}}>{Moment(formattedDate).format(' ddd D MMMM h:mm a')}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.temp}>
+                            <Image style={styles.tinyLogo} source={{uri: photo}}/>
+                            <Text style={{color: "white", fontSize: 100,fontFamily:'RobotoRegular'}}>{items.current.temp_c | 0}°</Text>
+                        </View>
+                        <View style={styles.feel}>
+                            <View
+                                style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                                <Text style={{color: 'white',fontFamily:'RobotoRegular',fontSize:18}}>{er[0] | 0}°/{er[1] | 0}° Feels like {items.current.feelslike_c | 0}°</Text>
+
+                            </View>
+                            <View
+                                style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+                                <Text style={{color: 'white',fontFamily:'RobotoRegular',fontSize:20}}>{items.current.condition.text}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.textCenter}>
+                            <View style={{flex: 1, paddingLeft: 200, alignItems: 'center', flexDirection: 'row'}}>
+                                <Text style={{color: 'white',fontFamily:'RobotoRegular',fontSize:14}}>Yesterday: {er[0] | 0}°/{er[1] | 0}°</Text>
+                            </View>
+                        </View>
+                        <View style={styles.UV}>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <View style={{flex: 0.5, alignItems: 'center', justifyContent: 'center'}}>
+                                    <SimpleLineIcons name="drop" size={24} color="white"/>
+                                </View>
+                                <View style={{flex: 1}}>
+                                    <View style={{flex: 1, justifyContent: 'center'}}>
+                                        <Text style={{color: 'white',fontFamily:'RobotoRegular'}}>Precipitation</Text>
+                                        <Text style={{color: 'white',fontFamily:'RobotoRegular'}}>{items.current.humidity}%</Text>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                        <View style={{width: 14,height: '100%',alignItems:'center',justifyContent:'center'}}>
-                            <View style={{backgroundColor:'white',width: 2,height: 50,alignItems:'center',justifyContent:'center'}}>
-
-                            </View>
-                        </View>
-                        <View style={{flex:1,flexDirection:'row'}}>
-                            <View style={{flex:0.5,alignItems:'center',justifyContent:'center'}}>
-                                <FontAwesome5 name="sun" size={24} color="yellow" />
-                            </View>
-                            <View style={{flex:1}}>
-                                <View style={{flex:1,justifyContent:'center'}}>
-                                    <Text style={{color: 'white'}}>UV Index</Text>
-                                    <Text style={{color: 'white'}}>{mg}</Text>
-                                </View>
-                            </View>
-                        </View>
-
-                    </View>
-                    <View style={ styles.textBottom}>
-                        <Text style={{color: 'white',paddingLeft:25,fontSize:12}}>Hourly</Text>
-                    </View>
-                <View style={ styles.hours}>
-                    <ScrollView horizontal = {true} style={{padding:10}}>
-                        {Main.map((item)=>{
-
-                            const photo2 = `http:` + item.condition.icon
-                            return(
-
-                        <View key={item.time_epoch} style = {{marginTop:25,marginLeft:10,marginRight:10,alignItems:'center',justifyContent:'space-between' }}>
-                            <View >
-                            <Text style={{color:'white',fontSize:14}}>{Moment(item.time).format(' h:mm a')}</Text>
-                            <Image style={{width:40,height:40,marginTop: 0,marginLeft:10}} source={{uri: photo2}}/>
-                            </View>
-                            <View style = {{alignItems:'center', justifyContent:'center'}}>
-
-                                <Text style ={{color:'white'}}>{item.temp_c|0}°</Text>
-                                <View style = {{width: 5,height: 30+ item.temp_c,backgroundColor:'white'}}>
-
+                            <View style={{width: 14, height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    width: 2,
+                                    height: 50,
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
 
                                 </View>
-
                             </View>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <View style={{flex: 0.5, alignItems: 'center', justifyContent: 'center'}}>
+                                    <FontAwesome5 name="sun" size={24} color="yellow"/>
+                                </View>
+                                <View style={{flex: 1}}>
+                                    <View style={{flex: 1, justifyContent: 'center'}}>
+                                        <Text style={{color: 'white',fontFamily:'RobotoRegular'}}>UV Index</Text>
+                                        <Text style={{color: 'white',fontFamily:'RobotoRegular'}}>{mg}</Text>
+                                    </View>
+                                </View>
+                            </View>
+
                         </View>
+                        <View style={styles.textBottom}>
+                            <Text style={{color: 'white', paddingLeft: 25, fontSize: 14,fontFamily:'RobotoRegular'}}>Hourly</Text>
+                        </View>
+                        <View style={styles.hours}>
+                            <ScrollView horizontal={true} style={{padding: 10}}>
+                                {Main.map((item) => {
 
-                        );
-                        })}
+                                    const photo2 = `http:` + item.condition.icon
+                                    return (
 
-                    </ScrollView>
-                </View>
-            <View style = {{flex:0.6}}>
+                                        <View key={item.time_epoch} style={{
+                                            marginTop: 25,
+                                            marginLeft: 10,
+                                            marginRight: 10,
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between'
+                                        }}>
+                                            <View>
+                                                <Text style={{
+                                                    color: 'white',
+                                                    fontSize: 14,
+                                                    fontFamily:'RobotoMedium'
+                                                }}>{Moment(item.time).format(' h:mm a')}</Text>
+                                                <Image style={{width: 40, height: 40, marginTop: 0, marginLeft: 10}}
+                                                       source={{uri: photo2}}/>
+                                            </View>
+                                            <View style={{alignItems: 'center', justifyContent: 'center'}}>
 
-            </View>
+                                                <Text style={{color: 'white',fontFamily:'RobotoMedium'}}> {item.temp_c | 0}°</Text>
+                                                <View style={{
+                                                    width: 5,
+                                                    height: 30 + item.temp_c,
+                                                    backgroundColor: 'white'
+                                                }}>
 
-            </View>
-            </LinearGradient>
-        );
+
+                                                </View>
+
+                                            </View>
+                                        </View>
+
+                                    );
+                                })}
+
+                            </ScrollView>
+                        </View>
+                        <View style={{flex: 0.1}}>
+                        </View >
+
+                    </View>
+                </LinearGradient>
+            );
+        }else{
+            return(
+
+                <AppLoading  startAsync={fonts} onFinish={() => setFont(true)} onError={err => console.log(err)}/>
+
+            );
+        }
     }
 }
 
@@ -173,7 +217,8 @@ const styles = StyleSheet.create({
     location:{
       flex:1,
         flexDirection:'row',
-        justifyContent:'flex-end'
+        justifyContent:'flex-end',
+        alignItems:'center',
     },
     country:{
         flex:2.6,
@@ -266,3 +311,4 @@ function getParsedDate(strDate){
 
     return strDate.toString();
 }
+
