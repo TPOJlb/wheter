@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Image, StatusBar, Platform} from 'react-native';
+import {StyleSheet, Text, View, Image, StatusBar, Platform,ScrollView} from 'react-native';
 import axios from "axios";
 import {LinearGradient} from 'expo-linear-gradient';
 import { AntDesign,Entypo,SimpleLineIcons,FontAwesome5   } from '@expo/vector-icons';
@@ -38,8 +38,8 @@ export default function App() {
         const photo = `http:` + items.current.condition.icon
         const formattedDate = getParsedDate ( items.current.last_updated)
         const er = maxTemp(items)
-        const mg = ui(items)
-        console.log(mg)
+        const mg = indexUi(items.current.uv)
+
         return (
             <LinearGradient colors={['#6f5fef', '#749af5', '#96d1fb']} style = {styles.gradient}>
             <View style={styles.container}>
@@ -60,7 +60,7 @@ export default function App() {
                     </View>
                     <View style={ styles.temp}>
                         <Image style={styles.tinyLogo} source={{uri: photo}}/>
-                        <Text style={{ color:"white" ,fontSize:110 }}>{items.current.temp_c | 0}</Text>
+                        <Text style={{ color:"white" ,fontSize:100 }}>{items.current.temp_c | 0}</Text>
                         <Entypo name="circle" size={13} color="white" style={{marginBottom: 55,}} />
                     </View>
                     <View style={ styles.feel}>
@@ -98,7 +98,7 @@ export default function App() {
                         </View>
                         <View style={{width: 14,height: '100%',alignItems:'center',justifyContent:'center'}}>
                             <View style={{backgroundColor:'white',width: 2,height: 50,alignItems:'center',justifyContent:'center'}}>
-                                
+
                             </View>
                         </View>
                         <View style={{flex:1,flexDirection:'row'}}>
@@ -106,7 +106,7 @@ export default function App() {
                                 <FontAwesome5 name="sun" size={24} color="yellow" />
                             </View>
                             <View style={{flex:1}}>
-                                <View style={{flex:1}}>
+                                <View style={{flex:1,justifyContent:'center'}}>
                                     <Text style={{color: 'white'}}>UV Index</Text>
                                     <Text style={{color: 'white'}}>{mg}</Text>
                                 </View>
@@ -115,11 +115,35 @@ export default function App() {
 
                     </View>
                     <View style={ styles.textBottom}>
-
+                        <Text style={{color: 'white',paddingLeft:25,fontSize:12}}>Hourly</Text>
                     </View>
-                    <View style={ styles.hours}>
+                <View style={ styles.hours}>
+                    <ScrollView horizontal = {true} style={{width: 100,height: 200}}>
 
-                    </View>
+                        <View style = {{width:60,height:170,marginTop:25,marginLeft:10,marginRight:10,alignItems:'center', }}>
+                            <View >
+                            <Text style={{color:'white',fontSize:14}}>{Moment(formattedDate).format(' h:mm a')}</Text>
+                            <Image style={{marginTop: 20,marginLeft:10,width: 30,height: 30}} source={{uri: photo}}/>
+                            </View>
+                            <View style = {{width: 50,height:90,alignItems:'center',
+                                justifyContent:'center',}}>
+                                <Text> </Text>
+                                <Text> </Text>
+                                <Text style ={{color:'white'}}>26</Text>
+                                <View style = {{width: 5,height:26,backgroundColor:'white'}}>
+
+
+                                </View>
+
+                            </View>
+                        </View>
+
+
+                    </ScrollView>
+                </View>
+            <View style = {{flex:0.6}}>
+
+            </View>
 
             </View>
             </LinearGradient>
@@ -167,23 +191,29 @@ const styles = StyleSheet.create({
     UV:{
         flex:3.5,
         flexDirection:'row',
-        borderRadius: 6,
+        borderRadius: 15,
         borderWidth:1,
         marginTop: 5,
         marginLeft:10,
         marginRight:10,
         paddingRight:20,
         paddingLeft:20,
+        backgroundColor:'#9fc5f5',
+        borderColor:'#9fc5f5',
 
 
     },
     textBottom:{
-        flex:0.5,
-        backgroundColor:'green',
+        marginTop:10,
+        flex:0.7,
     },
     hours:{
         flex:7,
-        backgroundColor:'orange',
+        flexDirection:'row',
+        marginLeft:10,
+        marginRight:10,
+        backgroundColor:'#9fc5f5',
+        borderRadius: 15,
     },
     gradient:{
         flex:1,
@@ -191,8 +221,8 @@ const styles = StyleSheet.create({
     },
 });
 
-function ui(item){
-    let items = ''
+function indexUi(item){
+    let items = ""
     if(item<=2){
         items = 'Low'
         if(item>= 3 && item<=5){
@@ -208,7 +238,6 @@ function ui(item){
             }
         }
     }
-    console.log(items)
     return (items);
 }
 
